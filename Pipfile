@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+requests = "*"
+dotenv = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+django-filter = "*"
+drf-spectacular = "*"
+django-money = "*"
+
+[dev-packages]
+ipython = "*"
+pytest-django = "*"
+
+[requires]
+python_version = "3.13"

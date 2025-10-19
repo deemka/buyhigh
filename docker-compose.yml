@@ -1,0 +1,43 @@
+services:
+
+  buyhigh:
+    image: buyhigh
+    build:
+       context: .
+    entrypoint: "pipenv run"
+    command: "./run.sh"
+    depends_on:
+      buyhigh_pg:
+        condition: service_healthy
+    links:
+      - buyhigh_pg
+    environment:
+      - DOCKER=True
+      - PYTHONUNBUFFERED=1
+      - SHELL=/bin/bash
+      - DJANGO_SUPERUSER_PASSWORD=buyhigh
+      - DJANGO_SUPERUSER_USERNAME=buyhigh
+      - DJANGO_SUPERUSER_EMAIL=buyhigh@sigsegv.nl
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+
+  buyhigh_pg:
+    container_name: buyhigh_pg
+    image: timescale/timescaledb-ha:pg17
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: buyhigh
+      POSTGRES_USER: buyhigh
+      POSTGRES_PASSWORD: buyhigh
+    hostname:
+      "buyhigh-db"
+    # volumes:
+    #  - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buyhigh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
